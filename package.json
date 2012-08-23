@@ -1,0 +1,13 @@
+{
+    "name": "babbs",
+    "version": "0.1.0",
+    "dependencies": {
+        "mkdirp": "0.3.x",
+        "async": "0.1.x",
+        "lop": "git://github.com/mwilliamson/lop.git"
+    },
+    "devDependencies": {
+        "nodeunit": "0.7.x"
+    }
+}
+
