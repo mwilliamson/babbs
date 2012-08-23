@@ -11,3 +11,14 @@ exports["Key tags are replaced with value from context"] = function(test) {
     test.equal("Mad man in a box", template.render({thing: "man", transport: "box"}));
     test.done();
 };
+
+exports["Function tags are called during rendering"] = function(test) {
+    var template = templating.compileString("Today is {#formatDate}");
+    
+    function formatDate() {
+        return "23 August 2012"
+    }
+    
+    test.equal("Today is 23 August 2012", template.render({formatDate: formatDate}));
+    test.done();
+};
