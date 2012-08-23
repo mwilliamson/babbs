@@ -12,7 +12,7 @@ exports["Key tags are wrapped in curly braces"] = function(test) {
     test.done();
 };
 
-exports["Function tags are wrapped in curly braces and start with hash"] = function(test) {
+exports["Function tags are wrapped in curly braces and start with hash and can self-close"] = function(test) {
     var tokens = tokeniser.tokenise("{#formatToday}");
     test.deepEqual([
         tokeniser.functionTag("formatToday", [])
@@ -21,7 +21,7 @@ exports["Function tags are wrapped in curly braces and start with hash"] = funct
 };
 
 exports["Function tags can take arguments"] = function(test) {
-    var tokens = tokeniser.tokenise("{#formatDate today iso8601}");
+    var tokens = tokeniser.tokenise("{#formatDate today iso8601 /}");
     test.deepEqual([
         tokeniser.functionTag("formatDate", ["today", "iso8601"])
     ], tokens);

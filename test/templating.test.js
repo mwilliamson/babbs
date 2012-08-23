@@ -13,7 +13,7 @@ exports["Key tags are replaced with value from context"] = function(test) {
 };
 
 exports["Function tags are called during rendering"] = function(test) {
-    var template = templating.compileString("Today is {#formatDate}");
+    var template = templating.compileString("Today is {#formatDate /}");
     
     function formatDate() {
         return "23 August 2012"
