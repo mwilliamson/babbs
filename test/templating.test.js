@@ -49,3 +49,20 @@ exports["Function tags are called with arguments"] = function(test) {
     test.equal("Today is 23 August 2012", template.render({}));
     test.done();
 };
+
+exports["Function tags can use context"] = function(test) {
+    var template = templating.compileString(
+        "Hello {#toUpperCase name /}",
+        {toUpperCase: toUpperCase}
+    );
+    
+    function toUpperCase(args) {
+        return function(context) {
+            var variableName = args[0];
+            return context[variableName].toUpperCase();
+        };
+    }
+    
+    test.equal("Hello BOB", template.render({name: "Bob"}));
+    test.done();
+};
