@@ -13,12 +13,39 @@ exports["Key tags are replaced with value from context"] = function(test) {
 };
 
 exports["Function tags are called during rendering"] = function(test) {
-    var template = templating.compileString("Today is {#formatDate /}");
+    var template = templating.compileString(
+        "Today is {#formatToday /}",
+        {formatToday: formatToday}
+    );
     
-    function formatDate() {
-        return "23 August 2012"
+    function formatToday() {
+        return function() {
+            return "23 August 2012"
+        };
     }
     
-    test.equal("Today is 23 August 2012", template.render({formatDate: formatDate}));
+    test.equal("Today is 23 August 2012", template.render({}));
+    test.done();
+};
+
+exports["Function tags are called with arguments"] = function(test) {
+    var template = templating.compileString(
+        "Today is {#formatDate today iso8601 /}",
+        {formatDate: formatDate}
+    );
+    
+    function formatDate(args) {
+        return function() {
+            var date = args[0];
+            var format = args[1];
+            if (date === "today" && format === "iso8601") {
+                return "23 August 2012";
+            } else {
+                return "Unrecognised parameters";
+            }
+        };
+    }
+    
+    test.equal("Today is 23 August 2012", template.render({}));
     test.done();
 };
