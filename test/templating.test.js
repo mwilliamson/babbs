@@ -75,11 +75,11 @@ exports["Function tags can use body"] = function(test) {
         {"if": templateIf}
     );
     
-    function templateIf(args, body) {
+    function templateIf(args, bodies) {
+        var variableName = args[0];
         return function(context) {
-            var variableName = args[0];
             if (context[variableName]) {
-                return body.render(context);
+                return bodies.block.render(context);
             } else {
                 return "";
             }
@@ -89,6 +89,29 @@ exports["Function tags can use body"] = function(test) {
     q.all([
         assertRender(test, "Bob", template.render({name: "Bob"})),
         assertRender(test, "", template.render({}))
+    ]).then(finish(test));
+};
+
+exports["Function tags can use named bodies"] = function(test) {
+    var template = templating.compileString(
+        "{#if name}{name}{:else}Anonymous{/if}",
+        {"if": templateIf}
+    );
+    
+    function templateIf(args, bodies) {
+        return function(context) {
+            var variableName = args[0];
+            if (context[variableName]) {
+                return bodies.block.render(context);
+            } else {
+                return bodies["else"].render(context);
+            }
+        };
+    }
+    
+    q.all([
+        assertRender(test, "Bob", template.render({name: "Bob"})),
+        assertRender(test, "Anonymous", template.render({}))
     ]).then(finish(test));
 };
 

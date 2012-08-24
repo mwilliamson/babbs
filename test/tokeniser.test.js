@@ -48,6 +48,16 @@ exports["Function tags can have body"] = function(test) {
     test.done();
 };
 
+exports["Named bodies start with colon"] = function(test) {
+    var source = createSource("{:else}");
+    var tokens = tokeniser.tokenise(source.string);
+    test.deepEqual([
+        tokeniser.namedBodyTag("else", source.range(0, 7)),
+        tokeniser.end(source.range(7, 7))
+    ], tokens);
+    test.done();
+};
+
 function createSource(string) {
     var stringSource = new StringSource(string, "raw string");
     return {

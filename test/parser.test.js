@@ -31,10 +31,20 @@ exports["Function tags can take arguments"] = function(test) {
 exports["Function tags can have body"] = function(test) {
     var nodes = parser.parse("{#if loggedIn}Logged in{/if}");
     test.deepEqual([
-        parser.functionTag("if", ["loggedIn"],
-            [parser.literal("Logged in")]
-        )
+        parser.functionTag("if", ["loggedIn"], {
+            block: [parser.literal("Logged in")]
+        })
     ], nodes);
     test.done();
 };
 
+exports["Function tags can have named body"] = function(test) {
+    var nodes = parser.parse("{#if loggedIn}Logged in{:else}Who are you?{/if}");
+    test.deepEqual([
+        parser.functionTag("if", ["loggedIn"], {
+            block: [parser.literal("Logged in")],
+            "else": [parser.literal("Who are you?")]
+        })
+    ], nodes);
+    test.done();
+};
