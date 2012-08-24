@@ -1,15 +1,18 @@
+var q = require("q");
+
 var templating = require("../lib/templating");
 
 exports["Template without tags generates string as-is"] = function(test) {
     var template = templating.compileString("Mad man in a box");
-    test.equal("Mad man in a box", template.render({}));
-    test.done();
+    assertRender(test, "Mad man in a box", template.render({})).then(finish(test));
 };
 
 exports["Key tags are replaced with value from context"] = function(test) {
     var template = templating.compileString("Mad {thing} in a {transport}");
-    test.equal("Mad man in a box", template.render({thing: "man", transport: "box"}));
-    test.done();
+    assertRender(test,
+        "Mad man in a box",
+        template.render({thing: "man", transport: "box"})
+    ).then(finish(test));
 };
 
 exports["Function tags are called during rendering"] = function(test) {
@@ -23,9 +26,8 @@ exports["Function tags are called during rendering"] = function(test) {
             return "23 August 2012"
         };
     }
-    
-    test.equal("Today is 23 August 2012", template.render({}));
-    test.done();
+    assertRender(test, "Today is 23 August 2012", template.render({}))
+        .then(finish(test));
 };
 
 exports["Function tags are called with arguments"] = function(test) {
@@ -46,8 +48,8 @@ exports["Function tags are called with arguments"] = function(test) {
         };
     }
     
-    test.equal("Today is 23 August 2012", template.render({}));
-    test.done();
+    assertRender(test, "Today is 23 August 2012", template.render({}))
+        .then(finish(test));
 };
 
 exports["Function tags can use context"] = function(test) {
@@ -63,8 +65,8 @@ exports["Function tags can use context"] = function(test) {
         };
     }
     
-    test.equal("Hello BOB", template.render({name: "Bob"}));
-    test.done();
+    assertRender(test, "Hello BOB", template.render({name: "Bob"}))
+        .then(finish(test));
 };
 
 exports["Function tags can use body"] = function(test) {
@@ -84,7 +86,39 @@ exports["Function tags can use body"] = function(test) {
         };
     }
     
-    test.equal("Bob", template.render({name: "Bob"}));
-    test.equal("", template.render({}));
-    test.done();
+    q.all([
+        assertRender(test, "Bob", template.render({name: "Bob"})),
+        assertRender(test, "", template.render({}))
+    ]).then(finish(test));
 };
+
+exports["Function tags can return promise"] = function(test) {
+    var template = templating.compileString(
+        "{#currentUser /}",
+        {"currentUser": currentUser}
+    );
+    
+    function currentUser() {
+        return function(context) {
+            var deferred = q.defer();
+            process.nextTick(function() {
+                deferred.resolve("Bob");
+            });
+            return deferred.promise;
+        };
+    }
+    
+    assertRender(test, "Bob", template.render({})).then(finish(test));
+};
+
+function assertRender(test, expected, result) {
+    return result.then(function(value) {
+        test.equal(expected, value);
+    });
+}
+
+function finish(test) {
+    return function() {
+        test.done();
+    };
+}
