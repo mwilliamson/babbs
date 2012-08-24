@@ -66,3 +66,25 @@ exports["Function tags can use context"] = function(test) {
     test.equal("Hello BOB", template.render({name: "Bob"}));
     test.done();
 };
+
+exports["Function tags can use body"] = function(test) {
+    var template = templating.compileString(
+        "{#if name}{name}{/if}",
+        {"if": templateIf}
+    );
+    
+    function templateIf(args, body) {
+        return function(context) {
+            var variableName = args[0];
+            if (context[variableName]) {
+                return body.render(context);
+            } else {
+                return "";
+            }
+        };
+    }
+    
+    test.equal("Bob", template.render({name: "Bob"}));
+    test.equal("", template.render({}));
+    test.done();
+};
