@@ -44,6 +44,21 @@ exports["include function can use context set by named argument"] = function(tes
             test.done();
         }).end();
 };
+
+exports["include function can fill in holes"] = function(test) {
+    var reader = createReader({
+        page: "{#include nav context=project}{:title}<h1>Store</h1>{/include}",
+        nav: '{#hole title /}<a href="/">Home</a>'
+    });
+    
+    var templates = new templating.Templates(reader, staticContexts.create);
+    templates.render("page", {})
+        .then(function(output) {
+            test.equal('<h1>Store</h1><a href="/">Home</a>', output);
+            test.done();
+        }).end();
+};
+
 function createReader(templates) {
     return {
         read: function(name) {
