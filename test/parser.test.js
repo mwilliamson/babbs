@@ -28,6 +28,14 @@ exports["Function tags can take arguments"] = function(test) {
     test.done();
 };
 
+exports["Function tags can take named arguments"] = function(test) {
+    var nodes = parser.parse("{#formatDate date=today format=iso8601 /}");
+    test.deepEqual([
+        parser.functionTag("formatDate", {date: "today", format: "iso8601"})
+    ], nodes);
+    test.done();
+};
+
 exports["Function tags can have body"] = function(test) {
     var nodes = parser.parse("{#if loggedIn}Logged in{/if}");
     test.deepEqual([

@@ -14,7 +14,7 @@ exports["include function renders referenced template"] = function(test) {
         .then(function(output) {
             test.equal('<a href="/">Home</a> <h1>Store</h1>', output);
             test.done();
-        });
+        }).end();
 };
 
 exports["include function creates empty context for included template"] = function(test) {
@@ -28,7 +28,7 @@ exports["include function creates empty context for included template"] = functi
         .then(function(output) {
             test.equal('<a href="/"></a> <h1>Store</h1>', output);
             test.done();
-        });
+        }).end();
 };
 
 function createReader(templates) {
