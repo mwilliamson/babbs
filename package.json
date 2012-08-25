@@ -6,7 +6,7 @@
         "async": "0.1.x",
         "q": "0.8.8",
         "connect": "2.4.x",
-        "lop": "git://github.com/mwilliamson/lop.git"
+        "snook": "git://github.com/mwilliamson/snook.git"
     },
     "devDependencies": {
         "nodeunit": "0.7.x"
