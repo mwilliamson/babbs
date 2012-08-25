@@ -5,6 +5,7 @@
         "mkdirp": "0.3.x",
         "async": "0.1.x",
         "q": "0.8.8",
+        "connect": "2.4.x",
         "lop": "git://github.com/mwilliamson/lop.git"
     },
     "devDependencies": {
