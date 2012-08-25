@@ -31,6 +31,19 @@ exports["include function creates empty context for included template"] = functi
         }).end();
 };
 
+exports["include function can use context set by named argument"] = function(test) {
+    var reader = createReader({
+        page: "{#include nav context=project /} <h1>Store</h1>",
+        nav: '<a href="/">{name}</a>'
+    });
+    
+    var templates = new templating.Templates(reader, staticContexts.create);
+    templates.render("page", {project: {name: "Home"}})
+        .then(function(output) {
+            test.equal('<a href="/">Home</a> <h1>Store</h1>', output);
+            test.done();
+        }).end();
+};
 function createReader(templates) {
     return {
         read: function(name) {
