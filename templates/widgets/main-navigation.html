@@ -1,6 +1,8 @@
 <div class="well">
   <ul class="nav nav-list">
-    <li class="nav-header">Projects</li>
-    <li><a href="/project/4">Link</a></li>
+    <li class="nav-header">Tasks</li>
+    {#for task in tasks}
+      <li><a href="/task/{task.id}">{task.name}</a></li>
+    {/for}
   </ul>
-</div><!--/.well -->
+</div>
