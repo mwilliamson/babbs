@@ -1,9 +1,13 @@
 <div class="well">
   <ul class="nav nav-list">
-    <li><a href="/">Overview</a></li>
-    <li class="nav-header">Tasks</li>
-    {#for task in tasks}
-      <li{#if task.active} class="active"{/if}><a href="/task/{task.id}" >{task.name}</a></li>
+    {#for link in links}
+      {#if link.header}
+        <li class="nav-header">{link.header}</li>
+      {:else}
+        <li{#if link.active} class="active"{/if}>
+          <a href="{link.url}" >{link.title}</a>
+        </li>
+      {/if}
     {/for}
   </ul>
 </div>
