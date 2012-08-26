@@ -1,4 +1,7 @@
 {#include ./base.html currentUrl=currentUrl}
   {:main}
     <h1>{task.name}</h1>
+    <p>{task.description}</p>
+    <p>Output of run:</p>
+    <pre>{taskResult.output}</pre>
 {/include}
