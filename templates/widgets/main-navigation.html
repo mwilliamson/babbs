@@ -1,5 +1,6 @@
 <div class="well">
   <ul class="nav nav-list">
+    <li><a href="/">Overview</a></li>
     <li class="nav-header">Tasks</li>
     {#for task in tasks}
       <li{#if task.active} class="active"{/if}><a href="/task/{task.id}" >{task.name}</a></li>
