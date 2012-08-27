@@ -1,0 +1,9 @@
+{#include ./base.html currentUrl=currentUrl}
+  {:main}
+    <h1>{task.name}</h1>
+    <p>{task.description}</p>
+    <p>{#if run.success}Success{:else}Failure{/if}</p>
+    <p>Output of run:</p>
+    <pre>{#ansiColors run.output /}</pre>
+{/include}
+
