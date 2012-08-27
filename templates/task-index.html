@@ -2,4 +2,10 @@
   {:main}
     <h1>{task.name}</h1>
     <p>{task.description}</p>
+    <h2>Runs</h2>
+    <ul>
+      {#for run in runs}
+        <li>{run}</li>
+      {/for}
+    </ul>
 {/include}
