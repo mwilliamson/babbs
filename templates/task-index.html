@@ -7,12 +7,14 @@
       {#for run in runs}
         <tr class="{#if run.success}success{:else}error{/if}">
           <td>
-            Run #{run.runNumber}:
-            {#if run.success}
-              success
-            {:else}
-              <strong>failed</strong>
-            {/if}
+            <a href="/task/{task.id}/runs/{run.runNumber}">
+              Run #{run.runNumber}:
+              {#if run.success}
+                success
+              {:else}
+                <strong>failed</strong>
+              {/if}
+            </a>
           </td>
           <td>
             Finished: {#formatDateTime run.finishDateTime /} (took {#formatTimeSpan run.timeTaken /})
