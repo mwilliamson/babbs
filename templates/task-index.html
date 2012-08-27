@@ -5,7 +5,13 @@
     <h2>Runs</h2>
     <ul>
       {#for run in runs}
-        <li>{run}</li>
+        <li>
+          #{run.runNumber}
+          {#if run.success}
+          {:else}
+            <span class="error">Failed</span>
+          {/if}
+        </li>
       {/for}
     </ul>
 {/include}
