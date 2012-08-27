@@ -14,6 +14,9 @@
               <strong>failed</strong>
             {/if}
           </td>
+          <td>
+            {#formatDateTime run.finishDateTime /}
+          </td>
         </tr>
       {/for}
     </ul>

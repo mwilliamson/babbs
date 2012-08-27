@@ -6,7 +6,8 @@
         "async": "0.1.x",
         "q": "0.8.8",
         "connect": "2.4.x",
-        "snook": "git://github.com/mwilliamson/snook.git"
+        "snook": "git://github.com/mwilliamson/snook.git",
+        "dateformat": "1.0.2-1.2.3"
     },
     "devDependencies": {
         "nodeunit": "0.7.x"
