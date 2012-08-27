@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+var path = require("path");
+
+var sourceControl = require("../lib/source-control");
+
+var workspace = process.env.workspace;
+var uri = process.env.uri;
+
+var fetcher = sourceControl.fetchRepository(uri, path.join(workspace, "checkout"));
+
+fetcher.on("output", function(outputChunk) {
+    process.stdout.write(outputChunk);
+});
+
+fetcher.on("error", function(err) {
+    process.exit(-1);
+});
+
+fetcher.on("end", function() {
+    process.exit();
+});
