@@ -3,15 +3,11 @@
     <h1>{task.name}</h1>
     <p>{task.description}</p>
     <h2>Runs</h2>
-    <ul>
+    <table class="table table-bordered table-striped">
       {#for run in runs}
-        <li>
-          #{run.runNumber}
-          {#if run.success}
-          {:else}
-            <span class="error">Failed</span>
-          {/if}
-        </li>
+        <tr class="{#if run.success}success{:else}error{/if}">
+          <td>#{run.runNumber}</td>
+        </tr>
       {/for}
     </ul>
 {/include}
