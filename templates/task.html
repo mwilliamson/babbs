@@ -4,5 +4,5 @@
     <p>{task.description}</p>
     <p>{#if taskResult.success}Success{:else}Failure{/if}</p>
     <p>Output of run:</p>
-    <pre>{taskResult.output}</pre>
+    <pre>{#ansiColors taskResult.output /}</pre>
 {/include}
