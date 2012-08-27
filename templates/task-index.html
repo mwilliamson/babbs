@@ -15,7 +15,7 @@
             {/if}
           </td>
           <td>
-            Finished: {#formatDateTime run.finishDateTime /}
+            Finished: {#formatDateTime run.finishDateTime /} (took {#formatTimeSpan run.timeTaken /})
           </td>
         </tr>
       {/for}
