@@ -30,3 +30,7 @@ body {
 .main-navigation li.active.status-failure .status-icon-failure {
     color: #fff;
 }
+
+.status-icon-unknown {
+    font-weight: bold;
+}
