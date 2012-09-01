@@ -60,14 +60,24 @@ exports["allRuns reads runs from runs directory"] = function(test) {
     }).end();
 };
 
+exports["next run result logs result to run number one if no previous run numbers"] = function(test) {
+    var fs = createFs({});
+    var runLogger = runLogging.create(fs);
+    runLogger.forTask(task).forNextRun().then(function(logger) {
+        return logger.logResult({success: true});
+    }).then(function() {
+        return runLogger.forTask(task).forRunNumber(1).fetch().then(function(result) {
+            test.deepEqual({success: true, runNumber: 1}, result);
+            test.done();
+        });
+    }).end();
+};
+
 function createFs(files) {
     function navigateTo(filePath) {
-        if (!/^\//.test(filePath)) {
-            return q.reject(new Error("Path must be absolute"));
-        }
-        var normalFilePath = path.normalize(filePath);
-        var parts = normalFilePath.substring(1).split("/");
-        return navigateToInner(files, parts);
+        return pathToParts(filePath).then(function(parts) {
+            return navigateToInner(files, parts);
+        });
     }
     
     function navigateToInner(current, filePathParts) {
@@ -85,28 +95,78 @@ function createFs(files) {
         }
     }
     
-    return {
-        readFile: function(filePath) {
-            return navigateTo(filePath).then(function(file) {
-                if (_.isString(file)) {
-                    return q.resolve(file);
-                } else {
-                    return q.reject(filePath + " is not a file");
-                }
-            });
-        },
-        readdir: function(dirPath) {
-            return navigateTo(dirPath).then(function(file) {
-                if (_.isString(file)) {
-                    return q.reject(new Error(dirPath + " is not directory"));
-                } else {
-                    return q.resolve(_.keys(file));
-                }
-            });
-        },
-        exists: function(filePath) {
-            return navigateTo(filePath).then(constant(true)).fail(constant(false));
+    function isFile(current) {
+        return current && _.isString(current);
+    }
+    
+    function isDirectory(current) {
+        return current && !_.isString(current);
+    }
+    
+    function pathToParts(filePath) {
+        if (!/^\//.test(filePath)) {
+            return q.reject(new Error("Path must be absolute"));
         }
+        var normalFilePath = path.normalize(filePath);
+        return q.resolve(normalFilePath.substring(1).split("/"));
+    }
+    
+    function readFile(filePath) {
+        return navigateTo(filePath).then(function(file) {
+            if (isFile(file)) {
+                return q.resolve(file);
+            } else {
+                return q.reject(filePath + " is not a file");
+            }
+        });
+    }
+    
+    function readdir(dirPath) {
+        return navigateTo(dirPath).then(function(file) {
+            if (isFile(file)) {
+                return q.reject(new Error(dirPath + " is not directory"));
+            } else {
+                return q.resolve(_.keys(file));
+            }
+        });
+    }
+    
+    function exists(filePath) {
+        return navigateTo(filePath).then(constant(true)).fail(constant(false));
+    }
+    
+    function mkdirp(filePath) {
+        return pathToParts(filePath).then(function(parts) {
+            var current = files;
+            for (var i = 0; i < parts.length; i += 1) {
+                if (isDirectory(current)) {
+                    current = current[parts[i]] = current[parts[i]] || {};
+                } else {
+                    return q.reject(new Error("/" + parts.slice(0, i).join("/") + " is not directory"));
+                }
+            }
+            return q.resolve();
+        });
+    }
+    
+    function writeFile(filePath, contents) {
+        var filename = path.basename(filePath);
+        return navigateTo(path.dirname(filePath)).then(function(parent) {
+            if (isDirectory(parent[filename])) {
+                return q.reject(new Error(filePath + " is directory"));
+            } else {
+                parent[filename] = contents;
+                return q.resolve();
+            }
+        });
+    }
+    
+    return {
+        readFile: readFile,
+        readdir: readdir,
+        exists: exists,
+        mkdirp: mkdirp,
+        writeFile: writeFile
     };
 }
 
