@@ -23,7 +23,8 @@ exports["previous run results are read from file named as run number"] = functio
     });
     var runLogger = runLogging.create(fs);
     runLogger.forTask(task).forRunNumber(42).fetch().then(function(result) {
-        test.deepEqual({success: true, runNumber: 42}, result);
+        test.deepEqual(42, result.runNumber);
+        test.deepEqual(true, result.success);
         test.done();
     }).end();
 };
@@ -53,8 +54,8 @@ exports["allRuns reads runs from runs directory"] = function(test) {
     var runLogger = runLogging.create(fs);
     runLogger.forTask(task).allRuns().then(function(runs) {
         var expected = [
-            {runNumber: 2, success: false},
-            {runNumber: 1, success: true}
+            {runNumber: 2, success: false, output: ""},
+            {runNumber: 1, success: true, output: ""}
         ];
         test.deepEqual(expected, runs);
         test.done();
@@ -68,7 +69,23 @@ exports["next run result logs result to run number one if no previous run number
         return logger.logResult({success: true});
     }).then(function() {
         return runLogger.forTask(task).forRunNumber(1).fetch().then(function(result) {
-            test.deepEqual({success: true, runNumber: 1}, result);
+            test.deepEqual(true, result.success);
+            test.deepEqual(1, result.runNumber);
+            test.done();
+        });
+    }).end();
+};
+
+exports["output is logged directly to file"] = function(test) {
+    var fs = createFs({});
+    var runLogger = runLogging.create(fs);
+    runLogger.forTask(task).forNextRun().then(function(logger) {
+        return logger.logOutput("One");
+    }).then(function(logger) {
+        return logger.logOutput("Two");
+    }).then(function() {
+        return runLogger.forTask(task).forRunNumber(1).fetch().then(function(log) {
+            test.deepEqual("OneTwo", log.output);
             test.done();
         });
     }).end();
