@@ -5,6 +5,11 @@ var q = require("q");
 
 var runLogging = require("../lib/runLogging.js");
 
+var task = {
+    id: "lop-tests",
+    root: "/lop-tests"
+};
+
 exports["previous run results are read from file named as run number"] = function(test) {
     var fs = createFs({
         "lop-tests": {
@@ -16,10 +21,6 @@ exports["previous run results are read from file named as run number"] = functio
         }
     });
     var runLogger = runLogging.create(fs);
-    var task = {
-        id: "lop-tests",
-        root: "/lop-tests"
-    };
     runLogger.forTask(task).forRunNumber(42).fetch().then(function(result) {
         test.deepEqual({success: true, runNumber: 42}, result);
         test.done();
@@ -29,10 +30,6 @@ exports["previous run results are read from file named as run number"] = functio
 exports["allRuns is empty if run directory does not exist"] = function(test) {
     var fs = createFs({});
     var runLogger = runLogging.create(fs);
-    var task = {
-        id: "lop-tests",
-        root: "/lop-tests"
-    };
     runLogger.forTask(task).allRuns().then(function(runs) {
         test.deepEqual([], runs);
         test.done();
@@ -53,10 +50,6 @@ exports["allRuns reads runs from runs directory"] = function(test) {
         }
     });
     var runLogger = runLogging.create(fs);
-    var task = {
-        id: "lop-tests",
-        root: "/lop-tests"
-    };
     runLogger.forTask(task).allRuns().then(function(runs) {
         var expected = [
             {runNumber: 2, success: false},
