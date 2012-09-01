@@ -7,10 +7,25 @@ body {
     min-width: 1em;
 }
 
-.status-success {
+.status-icon-success {
     color: #090;
 }
 
-.status-failure {
+.main-navigation li.active.status-success a {
+    background-color: #090;
+}
+
+.main-navigation li.active.status-success .status-icon-success {
+    color: #fff;
+}
+
+.status-icon-failure {
     color: #900;
+}
+.main-navigation li.active.status-failure a {
+    background-color: #900;
+}
+
+.main-navigation li.active.status-failure .status-icon-failure {
+    color: #fff;
 }

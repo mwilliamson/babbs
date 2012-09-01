@@ -4,7 +4,7 @@
       {#if link.header}
         <li class="nav-header">{link.header}</li>
       {:else}
-        <li{#if link.active} class="active"{/if}>
+        <li{#if link.cssClass} class="{link.cssClass}"{/if}>
           <a href="{link.url}">{link.title}</a>
         </li>
       {/if}
