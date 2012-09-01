@@ -2,6 +2,11 @@ body {
     padding-top: 1em;
 }
 
+.main-navigation .status {
+    display: inline-block;
+    min-width: 1em;
+}
+
 .status-success {
     color: #090;
 }
