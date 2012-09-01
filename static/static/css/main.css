@@ -2,8 +2,9 @@ body {
     padding-top: 1em;
 }
 
-.main-navigation .status {
+.main-navigation .status-icon {
     display: inline-block;
+    text-align: center;
     min-width: 1em;
 }
 
