@@ -62,6 +62,18 @@ exports["allRuns reads runs from runs directory"] = function(test) {
     }).end();
 };
 
+exports["getting next run logger immediately creates new run record"] = function(test) {
+    var fs = createFs({});
+    var runLogger = runLogging.create(fs);
+    runLogger.forTask(task).forNextRun().then(function() {
+        return runLogger.forTask(task).allRuns();
+    }).then(function(results) {
+        test.deepEqual(1, results.length);
+        test.deepEqual(1, results[0].runNumber);
+        test.done();
+    }).end();
+};
+
 exports["next run result logs result to run number one if no previous run numbers"] = function(test) {
     var fs = createFs({});
     var runLogger = runLogging.create(fs);
